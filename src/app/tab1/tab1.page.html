@@ -1,17 +1,62 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
+    <ion-title>Lista de Produtos</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button (click)="createForm(true)">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-list>
+    <ion-item *ngFor="let product of products">   
+      <ion-label>
+        <h2>{{ product.nome }}</h2>
+        <p class="ion-text-nowrap">{{ product.descricao }}</p>
+      </ion-label>
+      <p slot="end"><b>Preço:</b> {{ product.preco | currency }}</p>
+      <ion-item-group slot="end">
+        <ion-button size="small" color="primary" (click)="createForm(true, product)">
+          <ion-icon slot="icon-only" ios="logo-apple" md="pencil-outline"></ion-icon>
+        </ion-button>
+        <ion-button size="small" color="danger" (click)="confirmRemove(product.id!)">
+          <ion-icon slot="icon-only" ios="logo-apple" md="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-item-group>
+    </ion-item>
+  </ion-list>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <ion-modal [isOpen]="isModalOpen" (willDismiss)="close()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()">Cancel</ion-button>
+          </ion-buttons>
+          <ion-buttons slot="end">
+            <ion-button (click)="submit()" [strong]="true">Confirmar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <form [formGroup]="productForm">
+          <input formControlName="id" type="hidden">
+          <ion-item>
+            <ion-label position="floating">Nome</ion-label>
+            <ion-input formControlName="nome" type="text" required></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Descrição</ion-label>
+            <ion-input formControlName="descricao" type="text" required></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Preço</ion-label>
+            <ion-input formControlName="preco" type="number" required></ion-input>
+          </ion-item>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>
